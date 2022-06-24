@@ -9,8 +9,6 @@ public class RetoBatchApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RetoBatchApplication.class, args);
 	}
-	//prueba 1
-	//pureba 2
-// prueba 3
+
 
 }
