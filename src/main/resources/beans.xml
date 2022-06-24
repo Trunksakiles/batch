@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  	http://www.springframework.org/schema/beans/spring-beans.xsd
+  	http://www.springframework.org/schema/context/
+  	http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="idFileReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <description>Se define la fuente de entrada u origen de datos</description>
+        <property name="resource" value="#{jobParameters['/origin_file_batch.csv']}"></property>
+        <property name="lineMapper" ref="idCanalLineMapper"/>
+    </bean>
+
+    <bean id="idToken" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <!--  <property name="delimiter" value="#{applicationConfigurationService.getProperty('job.file.delimiter')}"></property>-->
+        <property name="delimiter" value=";"></property>
+        <property name="names" value="nombres,apellidoPaterno,apellidomaterno,celular" />
+    </bean>
+    <bean id="idFileReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <description>Se define la fuente de entrada u origen de datos</description>
+        <property name="resource" value="classpath:data/customer.csv"></property>
+        <property name="lineMapper" ref="idLineMapper"/>
+    </bean>
+
+    <bean id="idFileProcesor" class="com.bbva.papx.batch.proccess.CustomerItemProccess"></bean>
+
+    <bean id="idFileWriter" class="com.bbva.papx.batch.writer.CustomerItemWriter"></bean>
+
+
+    <bean id="idLineMapper" class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+        <property name="lineTokenizer" ref="idToken"/>
+        <property name="fieldSetMapper">
+            <bean class="com.reto2.batch.services.Leer"></bean>
+        </property>
+    </bean>
+
+    <bean id="idToken" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="delimiter" value=","></property>
+        <property name="names" value="fullname,register,email" />
+    </bean>
+
+    <bean id="escribir" class="com.reto2.batch.services.Escribir">
+    </bean>
+    <bean id="leer" class="com.reto2.batch.services.Leer">
+    </bean>
+    <bean id="procesar" class="com.reto2.batch.services.Procesar">
+    </bean>
+
+
+
+</beans>
+<!--<beans:beans
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns="http://www.springframework.org/schema/batch"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+    <bean id="idFileReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <description>Se define la fuente de entrada u origen de datos</description>
+        <property name="resource" value="#{jobParameters['rutaArchivo']}"></property>
+        <property name="lineMapper" ref="idCanalLineMapper"/>
+    </bean>-->
+
+
+
+
+<!--
+    <job id="job1" incrementer="defaultIncrementer"
+         job-repository="jobRepository1">
+        <description>Job to read file</description>
+        <listeners>
+            <listener ref="interceptorJobExecutionListener" />
+        </listeners>
+        <step id="idStep01" parent="step01"></step>
+    </job>
+    <step id="step01">
+        <tasklet>
+            <chunk reader="idFileReader" processor="idFileProcesor"
+                   writer="idFileWriter" commit-interval="2"></chunk>
+        </tasklet>
+    </step>
+
+    &lt;!&ndash;
+    nombres;"apellido paterno";"apellido materno";"celular"
+    Adel;"Acosta";"Pena";"754397050"&ndash;&gt;
+
+</beans:beans>-->
